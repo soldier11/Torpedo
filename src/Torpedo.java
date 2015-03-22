@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 class Torpedo extends JFrame implements KeyListener {
-	boolean[] key_t = new boolean[12];
+	boolean[] key_t = new boolean[12];//キー押されたかどうかの判定
 	int phase_1P = 0, phase_2P = 0;// 1P2Pそれぞれのターンにおけるフェーズの位置
 	int select_1P = 0, select_2P = 0;// 選択肢で選んでいる項目の位置
 	int phase_Game = 4;// ゲームのフェーズ数
@@ -118,7 +118,6 @@ class Torpedo extends JFrame implements KeyListener {
 		public void waitPanel() throws IOException {
 			waitPanel = new JPanel();
 			waitPanel.setBackground(Color.BLACK);
-
 		}
 
 		@Override
@@ -135,8 +134,7 @@ class Torpedo extends JFrame implements KeyListener {
 			// Graphics2D g2 = (Graphics2D) g;
 
 			// 1Pのフェーズごとの表示 TODO 表示系以外はあとで別へ移動
-			System.out
-					.println("1Pフェーズ:" + phase_1P + "　select_1P:" + select_1P);// デバック
+			System.out.println("1Pフェーズ:" + phase_1P + "　select_1P:" + select_1P);//確認コンソール表示
 			switch (phase_1P) {
 			case 0:// Title
 					// タイトル画面の表示　未実装
@@ -225,7 +223,7 @@ class Torpedo extends JFrame implements KeyListener {
 				break;
 			}
 			System.out.println("選択肢で選んだもの1,2 : " + selectAction[0][0] + ","
-					+ "" + selectAction[0][1]);// デバック
+					+ "" + selectAction[0][1]);//確認コンソール表示
 		}
 	}
 
@@ -235,9 +233,11 @@ class Torpedo extends JFrame implements KeyListener {
 		public void run() {
 			try {
 				while (true) {
-					if (action())// キー入力が行われた場合
+					if (action1P())// 1Pのキー入力が行われた場合
 						repaint();// paint()の再実行
-					Thread.sleep(140);// スレッドスリープによる画面の切り替えタイミングの決定
+					if (action2P())// 2Pのキー入力が行われた場合
+						repaint();// paint()の再実行
+					Thread.sleep(100);// スレッドスリープによる画面の切り替えタイミングの決定
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -245,8 +245,8 @@ class Torpedo extends JFrame implements KeyListener {
 		}
 	}
 
-	// キー入力による動作
-	public boolean action() {
+	// キー入力による動作 1P
+	public boolean action1P() {
 		if (key_t[0] == true) { // 1P 上操作 UP
 			if (isSelect[0] == true) {// 選択肢を選ぶ場面
 				// 選択肢の項目より上へカーソルが移動したら下にループする
@@ -294,6 +294,11 @@ class Torpedo extends JFrame implements KeyListener {
 			}
 			return true;
 		}
+		return false;
+	}
+	
+	// キー入力による動作 2P
+	public boolean action2P() {
 		if (key_t[6] == true) { // 2P 上操作 W
 			if (isSelect[1] == true) {// 選択肢を選ぶ場面
 				// 選択肢の項目より上へカーソルが移動したら下にループする
